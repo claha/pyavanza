@@ -1,0 +1,49 @@
+name: Tag actions
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+
+      - uses: "actions/create-release@v1"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+          draft: false
+          prerelease: false
+
+  publish:
+    needs: release
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+
+      - uses "actions/setup-python@v1"
+        with:
+          python-version: "3.x"
+      - run: python3 --version
+
+      - run: |
+          python3 -m pip install --upgrade pip
+          pip3 --version
+
+      - run: |
+          pip3 install setuptools wheel twine
+          pip3 show setuptools wheel twine
+
+      - env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: | 
+          python3 setup.py sdist bdist_wheel
+          twine upload dist/*
