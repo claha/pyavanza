@@ -1,17 +1,30 @@
 """Setup script for pyavanza."""
-import setuptools
+from setuptools import find_packages, setup
 
-setuptools.setup(
-    name="pyavanza",
-    version="0.1.0",
-    author="Claes Hallstrom",
-    author_email="hallstrom.claes@gmail.com",
-    description="A Python wrapper around the Avanza mobile API",
-    license="MIT License",
-    url="https://github.com/claha/pyavanza",
-    packages=setuptools.find_packages(),
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-    ],
+NAME = "pyavanza"
+VERSION = "0.1.0"
+LICENSE = "MIT License"
+AUTHOR = "Claes Hallstrom"
+URL = "https://github.com/claha/pyavanza"
+EMAIL = "hallstrom.claes@gmail.com"
+
+DESCRIPTION = "A Python wrapper around the Avanza mobile API"
+
+PACKAGES = find_packages()
+
+CLASSIFIERS = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+
+setup(
+    name=NAME,
+    version=VERSION,
+    author=AUTHOR,
+    author_email=EMAIL,
+    description=DESCRIPTION,
+    license=LICENSE,
+    url=URL,
+    packages=PACKAGES,
+    classifiers=CLASSIFIERS,
 )
