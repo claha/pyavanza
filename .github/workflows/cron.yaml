@@ -1,8 +1,9 @@
+---
 name: Cron actions
 
-on:
+on:  # yamllint disable-line rule:truthy
   schedule:
-    - cron:  '0 0 * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   lint:
@@ -29,6 +30,11 @@ jobs:
           gitlint --version
           # gitlint should ignore Merge commits by default but it does not seem to do it
           gitlint --ignore body-is-missing -c title-max-length.line-length=50 -c ignore-by-title.regex='^Merge(.*)into(.*)'
+
+      - run: |
+          pip3 install yamllint
+          yamllint --version
+          yamllint -d "{extends: default, rules: {line-length: disable}}" .
 
   build:
     runs-on: "ubuntu-latest"
