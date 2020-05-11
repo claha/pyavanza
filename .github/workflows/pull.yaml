@@ -35,6 +35,8 @@ jobs:
           yamllint --version
           yamllint -d "{extends: default, rules: {line-length: disable}}" .
 
+      - run: if git ls-files | xargs file | grep CRLF; then exit 1; fi
+
   build:
     runs-on: "ubuntu-latest"
     steps:
