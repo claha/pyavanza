@@ -28,3 +28,24 @@ jobs:
           gitlint --version
           # gitlint should ignore Merge commits by default but it does not seem to do it
           gitlint --ignore body-is-missing -c title-max-length.line-length=50 -c ignore-by-title.regex='^Merge(.*)into(.*)'
+
+  build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+
+      - uses: "actions/setup-python@v1"
+        with:
+          python-version: "3.x"
+      - run: python3 --version
+
+      - run: |
+          python3 -m pip install --upgrade pip
+          pip3 --version
+
+      - run: |
+          pip3 install setuptools wheel
+          pip3 show setuptools wheel
+
+      - run: |
+          python3 setup.py sdist bdist_wheel
