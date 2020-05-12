@@ -42,6 +42,11 @@ jobs:
           isort
 
       - run: |
+          pip3 install mypy
+          mypy --version
+          mypy --strict --ignore-missing-imports .
+
+      - run: |
           pip3 install gitlint
           gitlint --version
           # gitlint should ignore Merge commits by default but it does not seem to do it
