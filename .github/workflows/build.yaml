@@ -1,0 +1,34 @@
+---
+name: Build actions
+
+on:  # yamllint disable-line rule:truthy
+  schedule:
+    - cron: '0 0 * * *'
+
+  pull_request:
+
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+
+      - uses: "actions/setup-python@v1"
+        with:
+          python-version: "3.x"
+      - run: python3 --version
+
+      - run: |
+          python3 -m pip install --upgrade pip
+          pip3 --version
+
+      - run: |
+          pip3 install setuptools wheel
+          pip3 show setuptools wheel
+
+      - run: |
+          python3 setup.py sdist bdist_wheel
