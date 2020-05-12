@@ -26,6 +26,11 @@ jobs:
           black .
 
       - run: |
+          pip3 install flake8 flake8-docstrings
+          flake8 --version
+          flake8 .
+
+      - run: |
           pip3 install gitlint
           gitlint --version
           # gitlint should ignore Merge commits by default but it does not seem to do it
