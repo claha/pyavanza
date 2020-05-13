@@ -11,6 +11,19 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v2"
+      - run: git fetch --unshallow
+
+      - id: changelog
+        run: |
+          curr_tag=$(git describe --tags --abbrev=0)
+          prev_tag=$(git describe --tags --abbrev=0 $curr_tag^)
+          echo "Previous tag: $prev_tag"
+          echo "Current tag: $curr_tag"
+          log="$(git log --format='- %h %s' $prev_tag..$curr_tag)"
+          log="${log//'%'/'%25'}"
+          log="${log//$'\n'/'%0A'}"
+          log="${log//$'\r'/'%0D'}"
+          echo "::set-output name=body::$log"
 
       - uses: "actions/create-release@v1"
         env:
@@ -19,7 +32,9 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            Changes in this Release
+            ## Changes
+
+            "${{ steps.changelog.outputs.body }}"
           draft: false
           prerelease: false
 
