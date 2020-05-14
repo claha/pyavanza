@@ -6,13 +6,13 @@ import urllib.request
 from aiohttp import ClientSession
 
 AVANZA_API_BASE_URL = "https://www.avanza.se/_mobile/market"
+AVANZA_API_STOCK_URL = AVANZA_API_BASE_URL + "/stock/{id}"
 
 
 def get_stock(id: int) -> dict:
     """Get latest information of a stock."""
-    url = "{}/stock/{}".format(AVANZA_API_BASE_URL, id)
+    url = AVANZA_API_STOCK_URL.format(id=id)
     req = urllib.request.Request(url)
-
     try:
         resp = urllib.request.urlopen(req).read()
         return json.loads(resp.decode())
@@ -23,7 +23,7 @@ def get_stock(id: int) -> dict:
 
 async def get_stock_async(session: ClientSession, id: int) -> dict:
     """Get latest information of a stock asynchronously."""
-    url = "{}/stock/{}".format(AVANZA_API_BASE_URL, id)
+    url = AVANZA_API_STOCK_URL.format(id=id)
     async with session.get(url) as resp:
         if resp.status == 200:
             return await resp.json()
