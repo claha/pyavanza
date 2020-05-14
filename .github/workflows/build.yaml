@@ -1,5 +1,5 @@
 ---
-name: Build actions
+name: Build
 
 on:  # yamllint disable-line rule:truthy
   schedule:

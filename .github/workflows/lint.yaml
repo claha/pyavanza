@@ -1,5 +1,5 @@
 ---
-name: Lint actions
+name: Lint
 
 on:  # yamllint disable-line rule:truthy
   schedule:
