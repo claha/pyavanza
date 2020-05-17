@@ -1,0 +1,9 @@
+[run]
+branch = True
+command_line = -m unittest --verbose
+source = pyavanza
+
+[report]
+fail_under = 100
+precision = 2
+show_missing = True
