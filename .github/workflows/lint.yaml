@@ -54,6 +54,6 @@ jobs:
       - run: |
           pip3 install yamllint
           yamllint --version
-          yamllint -d "{extends: default, rules: {line-length: disable}}" .
+          yamllint .
 
       - run: if git ls-files | xargs file | grep CRLF; then exit 1; fi
