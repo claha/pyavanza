@@ -24,36 +24,13 @@ jobs:
 
       - run: |
           python3 -m pip install --upgrade pip
-          pip3 --version
+          pip3 install -r requirements_lint.txt
 
-      - run: |
-          pip3 install black
-          black --version
-          black .
-
-      - run: |
-          pip3 install flake8 flake8-docstrings
-          flake8 --version
-          flake8 .
-
-      - run: |
-          pip3 install isort
-          isort --version
-          isort --check-only
-
-      - run: |
-          pip3 install mypy
-          mypy --version
-          mypy
-
-      - run: |
-          pip3 install gitlint
-          gitlint --version
-          gitlint
-
-      - run: |
-          pip3 install yamllint
-          yamllint --version
-          yamllint .
+      - run: black .
+      - run: flake8 --count
+      - run: isort --check-only
+      - run: mypy
+      - run: yamllint .
+      - run: gitlint
 
       - run: if git ls-files | xargs file | grep CRLF; then exit 1; fi
