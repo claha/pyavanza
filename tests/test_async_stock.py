@@ -1,4 +1,4 @@
-"""Test."""
+"""Test stock async."""
 import asyncio
 import unittest
 from unittest.mock import Mock

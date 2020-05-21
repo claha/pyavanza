@@ -30,6 +30,30 @@ def _api_call(url: str) -> Dict[str, Any]:
     return {}
 
 
+async def _api_call_async(session: aiohttp.ClientSession, url: str) -> Dict[str, Any]:
+    """Make an api call asynchronously."""
+    try:
+        resp = await session.get(url, raise_for_status=True)
+        return await resp.json()  # type: ignore
+    except aiohttp.ClientResponseError as e:
+        LOGGER.warning("Response Error %d: %s" % (e.status, e.message))
+    except aiohttp.ClientConnectionError as e:
+        LOGGER.warning("Connection Error: %s" % (e))
+    return {}
+
+
+def _create_search_url(query: str, limit: int, instrument: Instrument) -> str:
+    """Create search url."""
+    query = urllib.parse.quote(query)
+    if instrument is not Instrument.ANY:
+        url = AVANZA_API_SEARCH_INSTRUMENT_URL.format(
+            instrument=instrument.value, query=query, limit=limit
+        )
+    else:
+        url = AVANZA_API_SEARCH_URL.format(query=query, limit=limit)
+    return url
+
+
 def get_stock(id: int) -> Dict[str, Any]:
     """Get latest information of a stock."""
     url = AVANZA_API_STOCK_URL.format(id=id)
@@ -40,24 +64,22 @@ def search(
     query: str, limit: int = -1, instrument: Instrument = Instrument.ANY
 ) -> Dict[str, Any]:
     """Search for instruments."""
-    query = urllib.parse.quote(query)
-    if instrument is not Instrument.ANY:
-        url = AVANZA_API_SEARCH_INSTRUMENT_URL.format(
-            instrument=instrument.value, query=query, limit=limit
-        )
-    else:
-        url = AVANZA_API_SEARCH_URL.format(query=query, limit=limit)
+    url = _create_search_url(query, limit, instrument)
     return _api_call(url)
 
 
 async def get_stock_async(session: aiohttp.ClientSession, id: int) -> Dict[str, Any]:
     """Get latest information of a stock asynchronously."""
     url = AVANZA_API_STOCK_URL.format(id=id)
-    try:
-        resp = await session.get(url, raise_for_status=True)
-        return await resp.json()  # type: ignore
-    except aiohttp.ClientResponseError as e:
-        LOGGER.warning("Response Error %d: %s" % (e.status, e.message))
-    except aiohttp.ClientConnectionError as e:
-        LOGGER.warning("Connection Error: %s" % (e))
-    return {}
+    return await _api_call_async(session, url)
+
+
+async def search_async(
+    session: aiohttp.ClientSession,
+    query: str,
+    limit: int = -1,
+    instrument: Instrument = Instrument.ANY,
+) -> Dict[str, Any]:
+    """Search for instruments asynchronously."""
+    url = _create_search_url(query, limit, instrument)
+    return await _api_call_async(session, url)
