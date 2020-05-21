@@ -2,19 +2,24 @@
 import json
 import logging
 import urllib.error
+import urllib.parse
 import urllib.request
 from typing import Any, Dict
 
 import aiohttp
 
+from .const import (
+    AVANZA_API_SEARCH_INSTRUMENT_URL,
+    AVANZA_API_SEARCH_URL,
+    AVANZA_API_STOCK_URL,
+    Instrument,
+)
+
 LOGGER = logging.getLogger(__name__)
-AVANZA_API_BASE_URL = "https://www.avanza.se/_mobile/market"
-AVANZA_API_STOCK_URL = AVANZA_API_BASE_URL + "/stock/{id}"
 
 
-def get_stock(id: int) -> Dict[str, Any]:
-    """Get latest information of a stock."""
-    url = AVANZA_API_STOCK_URL.format(id=id)
+def _api_call(url: str) -> Dict[str, Any]:
+    """Make an api call."""
     try:
         resp = urllib.request.urlopen(url).read()
         return json.loads(resp.decode())  # type: ignore
@@ -23,6 +28,26 @@ def get_stock(id: int) -> Dict[str, Any]:
     except urllib.error.URLError as e:
         LOGGER.warning("URL Error: %s" % (e.reason))
     return {}
+
+
+def get_stock(id: int) -> Dict[str, Any]:
+    """Get latest information of a stock."""
+    url = AVANZA_API_STOCK_URL.format(id=id)
+    return _api_call(url)
+
+
+def search(
+    query: str, limit: int = -1, instrument: Instrument = Instrument.ANY
+) -> Dict[str, Any]:
+    """Search for instruments."""
+    query = urllib.parse.quote(query)
+    if instrument is not Instrument.ANY:
+        url = AVANZA_API_SEARCH_INSTRUMENT_URL.format(
+            instrument=instrument.value, query=query, limit=limit
+        )
+    else:
+        url = AVANZA_API_SEARCH_URL.format(query=query, limit=limit)
+    return _api_call(url)
 
 
 async def get_stock_async(session: aiohttp.ClientSession, id: int) -> Dict[str, Any]:

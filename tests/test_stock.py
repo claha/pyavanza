@@ -1,4 +1,4 @@
-"""Test."""
+"""Test stock."""
 import json
 import unittest
 import urllib.error
