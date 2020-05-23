@@ -1,5 +1,6 @@
 """Test stock async."""
 import asyncio
+import json
 import unittest
 from unittest.mock import Mock
 
@@ -33,36 +34,44 @@ class TestStockAsync(unittest.TestCase):
         self.mock_session.get = mock_get
 
     @sync
-    async def test_get_stock_fail_connection_error(self):
-        """Test that connection error can be handled."""
+    async def test_get_stock_fail_request_error(self):
+        """Test that triggers a request error."""
         id = 1234
-        self.mock_session.get.side_effect = aiohttp.ClientConnectionError(
-            "connection error"
-        )
+        self.mock_session.get.side_effect = aiohttp.ClientConnectionError(None)
 
-        data = await pyavanza.get_stock_async(self.mock_session, id)
-        self.assertEqual(len(data), 0)
+        with self.assertRaises(pyavanza.AvanzaRequestError):
+            await pyavanza.get_stock_async(self.mock_session, id)
         self.mock_session.get.assert_called_once_with(
             pyavanza.AVANZA_API_STOCK_URL.format(id=id), raise_for_status=True
         )
 
     @sync
     async def test_get_stock_fail_response_error(self):
-        """Test that response error can be handled."""
+        """Test that triggers a response error.."""
         id = 1234
-        self.mock_session.get.side_effect = aiohttp.ClientResponseError(
-            None, None, status=404, message="response error"
-        )
+        self.mock_session.get.side_effect = aiohttp.ClientResponseError(None, None)
 
-        data = await pyavanza.get_stock_async(self.mock_session, id)
-        self.assertEqual(len(data), 0)
+        with self.assertRaises(pyavanza.AvanzaResponseError):
+            await pyavanza.get_stock_async(self.mock_session, id)
         self.mock_session.get.assert_called_once_with(
             pyavanza.AVANZA_API_STOCK_URL.format(id=id), raise_for_status=True
         )
 
     @sync
+    async def test_get_stock_parse_error(self):
+        """Test that triggers a parse error."""
+        id = 1234
+        mock_resp = Mock()
+        mock_resp.json = make_mocked_coro()
+        mock_resp.json.side_effect = json.JSONDecodeError(None, "", 0)
+        self.mock_session.get = make_mocked_coro(return_value=mock_resp)
+
+        with self.assertRaises(pyavanza.AvanzaParseError):
+            await pyavanza.get_stock_async(self.mock_session, id)
+
+    @sync
     async def test_get_stock_success(self):
-        """Test a successful request."""
+        """Test a successful request and response."""
         id = 1234
         mock_resp = Mock()
         mock_resp.json = make_mocked_coro(return_value={"id": id})
