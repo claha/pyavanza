@@ -15,36 +15,47 @@ class TestSearch(unittest.TestCase):
         return None
 
     @patch("pyavanza.urllib.request.urlopen")
-    def test_search_fail_url_error(self, mock_urlopen):
-        """Test that url error can be handled."""
+    def test_search_fail_request_error(self, mock_urlopen):
+        """Test that triggers a request error."""
         query = "test"
         limit = 10
-        mock_urlopen.side_effect = urllib.error.URLError("url error")
+        mock_urlopen.side_effect = urllib.error.URLError(None)
 
-        data = pyavanza.search(query, limit=limit)
-        self.assertEqual(len(data), 0)
+        with self.assertRaises(pyavanza.AvanzaRequestError):
+            pyavanza.search(query, limit=limit)
         mock_urlopen.assert_called_once_with(
             pyavanza.AVANZA_API_SEARCH_URL.format(query=query, limit=limit)
         )
 
     @patch("pyavanza.urllib.request.urlopen")
-    def test_search_fail_http_error(self, mock_urlopen):
-        """Test that http error can be handled."""
+    def test_search_fail_response_error(self, mock_urlopen):
+        """Test that triggers a response error."""
         query = "test"
         limit = 10
-        mock_urlopen.side_effect = urllib.error.HTTPError(
-            "url", 404, "http error", None, None
+        mock_urlopen.side_effect = urllib.error.HTTPError(None, None, None, None, None)
+
+        with self.assertRaises(pyavanza.AvanzaResponseError):
+            pyavanza.search(query, limit=limit)
+        mock_urlopen.assert_called_once_with(
+            pyavanza.AVANZA_API_SEARCH_URL.format(query=query, limit=limit)
         )
 
-        data = pyavanza.search(query, limit=limit)
-        self.assertEqual(len(data), 0)
+    @patch("pyavanza.urllib.request.urlopen")
+    def test_search_fail_parse_error(self, mock_urlopen):
+        """Test that triggers a parse error."""
+        query = "test"
+        limit = 10
+        mock_urlopen.return_value.read.return_value = b""
+
+        with self.assertRaises(pyavanza.AvanzaParseError):
+            pyavanza.search(query, limit=limit)
         mock_urlopen.assert_called_once_with(
             pyavanza.AVANZA_API_SEARCH_URL.format(query=query, limit=limit)
         )
 
     @patch("pyavanza.urllib.request.urlopen")
     def test_search_success(self, mock_urlopen):
-        """Test a successful request."""
+        """Test a successful request and response."""
         query = "test"
         limit = 10
         instrument = pyavanza.Instrument.STOCK

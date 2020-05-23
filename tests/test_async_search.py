@@ -1,5 +1,6 @@
 """Test stock search."""
 import asyncio
+import json
 import unittest
 from unittest.mock import Mock
 
@@ -33,16 +34,14 @@ class TestSearchAsync(unittest.TestCase):
         self.mock_session.get = mock_get
 
     @sync
-    async def test_search_fail_connection_error(self):
-        """Test that connection error can be handled."""
+    async def test_search_fail_request_error(self):
+        """Test that triggers a request error."""
         query = "test"
         limit = 10
-        self.mock_session.get.side_effect = aiohttp.ClientConnectionError(
-            "connection error"
-        )
+        self.mock_session.get.side_effect = aiohttp.ClientConnectionError(None)
 
-        data = await pyavanza.search_async(self.mock_session, query, limit=limit)
-        self.assertEqual(len(data), 0)
+        with self.assertRaises(pyavanza.AvanzaRequestError):
+            await pyavanza.search_async(self.mock_session, query, limit=limit)
         self.mock_session.get.assert_called_once_with(
             pyavanza.AVANZA_API_SEARCH_URL.format(query=query, limit=limit),
             raise_for_status=True,
@@ -50,23 +49,37 @@ class TestSearchAsync(unittest.TestCase):
 
     @sync
     async def test_search_fail_response_error(self):
-        """Test that response error can be handled."""
+        """Test that triggers a response error."""
         query = "test"
         limit = 10
-        self.mock_session.get.side_effect = aiohttp.ClientResponseError(
-            None, None, status=404, message="response error"
-        )
+        self.mock_session.get.side_effect = aiohttp.ClientResponseError(None, None)
 
-        data = await pyavanza.search_async(self.mock_session, query, limit=limit)
-        self.assertEqual(len(data), 0)
+        with self.assertRaises(pyavanza.AvanzaResponseError):
+            await pyavanza.search_async(self.mock_session, query, limit=limit)
         self.mock_session.get.assert_called_once_with(
             pyavanza.AVANZA_API_SEARCH_URL.format(query=query, limit=limit),
             raise_for_status=True,
         )
 
     @sync
+    async def test_search_fail_parse_error(self):
+        """Test that triggers a parse error."""
+        query = "test"
+        limit = 10
+        instrument = pyavanza.Instrument.STOCK
+        mock_resp = Mock()
+        mock_resp.json = make_mocked_coro()
+        mock_resp.json.side_effect = json.JSONDecodeError(None, "", 0)
+        self.mock_session.get = make_mocked_coro(return_value=mock_resp)
+
+        with self.assertRaises(pyavanza.AvanzaParseError):
+            await pyavanza.search_async(
+                self.mock_session, query, limit=limit, instrument=instrument
+            )
+
+    @sync
     async def test_search_success(self):
-        """Test a successful request."""
+        """Test a successful request and response."""
         query = "test"
         limit = 10
         instrument = pyavanza.Instrument.STOCK
