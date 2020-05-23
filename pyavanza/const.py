@@ -9,7 +9,7 @@ AVANZA_API_SEARCH_INSTRUMENT_URL = (
 )
 
 
-class Instrument(Enum):
+class InstrumentType(Enum):
     """Instrument types."""
 
     ANY = "ANY"

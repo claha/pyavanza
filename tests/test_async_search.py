@@ -66,7 +66,7 @@ class TestSearchAsync(unittest.TestCase):
         """Test that triggers a parse error."""
         query = "test"
         limit = 10
-        instrument = pyavanza.Instrument.STOCK
+        instrument = pyavanza.InstrumentType.STOCK
         mock_resp = Mock()
         mock_resp.json = make_mocked_coro()
         mock_resp.json.side_effect = json.JSONDecodeError(None, "", 0)
@@ -82,7 +82,7 @@ class TestSearchAsync(unittest.TestCase):
         """Test a successful request and response."""
         query = "test"
         limit = 10
-        instrument = pyavanza.Instrument.STOCK
+        instrument = pyavanza.InstrumentType.STOCK
         mock_resp = Mock()
         mock_resp.json = make_mocked_coro(
             return_value={

@@ -58,7 +58,7 @@ class TestSearch(unittest.TestCase):
         """Test a successful request and response."""
         query = "test"
         limit = 10
-        instrument = pyavanza.Instrument.STOCK
+        instrument = pyavanza.InstrumentType.STOCK
         mock_urlopen.return_value.read.return_value = json.dumps(
             {
                 "totalNumberOfHits": 1,

@@ -12,7 +12,7 @@ from pyavanza.const import (
     AVANZA_API_SEARCH_INSTRUMENT_URL,
     AVANZA_API_SEARCH_URL,
     AVANZA_API_STOCK_URL,
-    Instrument,
+    InstrumentType,
 )
 from pyavanza.error import AvanzaParseError, AvanzaRequestError, AvanzaResponseError
 
@@ -47,10 +47,10 @@ async def _api_call_async(session: aiohttp.ClientSession, url: str) -> Dict[str,
         raise AvanzaParseError(str(e))
 
 
-def _create_search_url(query: str, limit: int, instrument: Instrument) -> str:
+def _create_search_url(query: str, limit: int, instrument: InstrumentType) -> str:
     """Create search url."""
     query = urllib.parse.quote(query)
-    if instrument is not Instrument.ANY:
+    if instrument is not InstrumentType.ANY:
         url = AVANZA_API_SEARCH_INSTRUMENT_URL.format(
             instrument=instrument.value, query=query, limit=limit
         )
@@ -66,7 +66,7 @@ def get_stock(id: int) -> Dict[str, Any]:
 
 
 def search(
-    query: str, limit: int = -1, instrument: Instrument = Instrument.ANY
+    query: str, limit: int = -1, instrument: InstrumentType = InstrumentType.ANY
 ) -> Dict[str, Any]:
     """Search for instruments."""
     url = _create_search_url(query, limit, instrument)
@@ -83,7 +83,7 @@ async def search_async(
     session: aiohttp.ClientSession,
     query: str,
     limit: int = -1,
-    instrument: Instrument = Instrument.ANY,
+    instrument: InstrumentType = InstrumentType.ANY,
 ) -> Dict[str, Any]:
     """Search for instruments asynchronously."""
     url = _create_search_url(query, limit, instrument)
