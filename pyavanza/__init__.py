@@ -8,7 +8,7 @@ from typing import Any, Dict
 
 import aiohttp
 
-from .const import (
+from pyavanza.const import (
     AVANZA_API_SEARCH_INSTRUMENT_URL,
     AVANZA_API_SEARCH_URL,
     AVANZA_API_STOCK_URL,
