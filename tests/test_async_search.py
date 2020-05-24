@@ -78,6 +78,64 @@ class TestSearchAsync(unittest.TestCase):
             )
 
     @sync
+    async def test_search_success_no_hits(self):
+        """Test a successful request and response without hits."""
+        query = "test"
+        limit = 10
+        instrument = pyavanza.InstrumentType.STOCK
+        mock_resp = Mock()
+        mock_resp.json = make_mocked_coro(
+            return_value={"totalNumberOfHits": 1, "hits": []}
+        )
+        self.mock_session.get = make_mocked_coro(return_value=mock_resp)
+
+        instruments = await pyavanza.search_async(
+            self.mock_session, query, limit=limit, instrument=instrument
+        )
+        self.assertEqual(len(instruments), 0)
+        self.mock_session.get.assert_called_once_with(
+            pyavanza.AVANZA_API_SEARCH_INSTRUMENT_URL.format(
+                instrument=instrument.value, query=query, limit=limit
+            ),
+            raise_for_status=True,
+        )
+
+    @sync
+    async def test_search_success_low_limit(self):
+        """Test a successful request and response, limit is lower than number of hits."""
+        query = "test"
+        limit = 10
+        mock_resp = Mock()
+        mock_resp.json = make_mocked_coro(
+            return_value={
+                "totalNumberOfHits": 2,
+                "hits": [
+                    {
+                        "instrumentType": "STOCK",
+                        "numberOfHits": 1,
+                        "topHits": [
+                            {
+                                "tradable": True,
+                                "id": "1234",
+                                "tickerSymbol": "TEST",
+                                "name": "Test",
+                            }
+                        ],
+                    },
+                    {"instrumentType": "FUND", "numberOfHits": 1},
+                ],
+            }
+        )
+        self.mock_session.get = make_mocked_coro(return_value=mock_resp)
+
+        instruments = await pyavanza.search_async(self.mock_session, query, limit=limit)
+        self.assertEqual(len(instruments), 1)
+        self.mock_session.get.assert_called_once_with(
+            pyavanza.AVANZA_API_SEARCH_URL.format(query=query, limit=limit),
+            raise_for_status=True,
+        )
+
+    @sync
     async def test_search_success(self):
         """Test a successful request and response."""
         query = "test"
@@ -88,21 +146,32 @@ class TestSearchAsync(unittest.TestCase):
             return_value={
                 "totalNumberOfHits": 1,
                 "hits": [
-                    {"instrumentType": "STOCK", "numberOfHits": 1, "topHits": [{}]}
+                    {
+                        "instrumentType": instrument.value,
+                        "numberOfHits": 1,
+                        "topHits": [
+                            {
+                                "tradable": True,
+                                "id": "1234",
+                                "tickerSymbol": "TEST",
+                                "name": "Test",
+                            }
+                        ],
+                    }
                 ],
             }
         )
         self.mock_session.get = make_mocked_coro(return_value=mock_resp)
 
-        data = await pyavanza.search_async(
+        instruments = await pyavanza.search_async(
             self.mock_session, query, limit=limit, instrument=instrument
         )
-        self.assertEqual(len(data), 2)
-        self.assertEqual(data["totalNumberOfHits"], 1)
-        self.assertTrue(len(data["hits"]), 1)
-        self.assertTrue(data["hits"][0]["instrumentType"], instrument.value)
-        self.assertTrue(data["hits"][0]["numberOfHits"], 1)
-        self.assertTrue(len(data["hits"][0]["topHits"]), 1)
+        self.assertEqual(len(instruments), 1)
+        self.assertEqual(instruments[0].type, instrument)
+        self.assertTrue(instruments[0].tradable)
+        self.assertEqual(instruments[0].id, "1234")
+        self.assertEqual(instruments[0].ticker_symbol, "TEST")
+        self.assertEqual(instruments[0].name, "Test")
         self.mock_session.get.assert_called_once_with(
             pyavanza.AVANZA_API_SEARCH_INSTRUMENT_URL.format(
                 instrument=instrument.value, query=query, limit=limit

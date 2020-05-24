@@ -4,7 +4,7 @@ import logging
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import aiohttp
 
@@ -15,6 +15,7 @@ from pyavanza.const import (
     InstrumentType,
 )
 from pyavanza.error import AvanzaParseError, AvanzaRequestError, AvanzaResponseError
+from pyavanza.instrument import Instrument, parse_instruments
 
 LOGGER = logging.getLogger(__name__)
 
@@ -67,10 +68,11 @@ def get_stock(id: int) -> Dict[str, Any]:
 
 def search(
     query: str, limit: int = -1, instrument: InstrumentType = InstrumentType.ANY
-) -> Dict[str, Any]:
+) -> List[Instrument]:
     """Search for instruments."""
     url = _create_search_url(query, limit, instrument)
-    return _api_call(url)
+    data = _api_call(url)
+    return parse_instruments(data)
 
 
 async def get_stock_async(session: aiohttp.ClientSession, id: int) -> Dict[str, Any]:
@@ -84,7 +86,8 @@ async def search_async(
     query: str,
     limit: int = -1,
     instrument: InstrumentType = InstrumentType.ANY,
-) -> Dict[str, Any]:
+) -> List[Instrument]:
     """Search for instruments asynchronously."""
     url = _create_search_url(query, limit, instrument)
-    return await _api_call_async(session, url)
+    data = await _api_call_async(session, url)
+    return parse_instruments(data)
