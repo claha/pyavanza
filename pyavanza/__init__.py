@@ -16,6 +16,7 @@ from pyavanza.const import (
 )
 from pyavanza.error import AvanzaParseError, AvanzaRequestError, AvanzaResponseError
 from pyavanza.instrument import Instrument, parse_instruments
+from pyavanza.stock import Stock
 
 LOGGER = logging.getLogger(__name__)
 
@@ -60,10 +61,11 @@ def _create_search_url(query: str, limit: int, instrument: InstrumentType) -> st
     return url
 
 
-def get_stock(id: int) -> Dict[str, Any]:
+def get_stock(id: int) -> Stock:
     """Get latest information of a stock."""
     url = AVANZA_API_STOCK_URL.format(id=id)
-    return _api_call(url)
+    data = _api_call(url)
+    return Stock(data)
 
 
 def search(
@@ -75,10 +77,11 @@ def search(
     return parse_instruments(data)
 
 
-async def get_stock_async(session: aiohttp.ClientSession, id: int) -> Dict[str, Any]:
+async def get_stock_async(session: aiohttp.ClientSession, id: int) -> Stock:
     """Get latest information of a stock asynchronously."""
     url = AVANZA_API_STOCK_URL.format(id=id)
-    return await _api_call_async(session, url)
+    data = await _api_call_async(session, url)
+    return Stock(data)
 
 
 async def search_async(
