@@ -1,31 +1,16 @@
 """Test stock async."""
-import asyncio
 import json
-import unittest
 from unittest.mock import Mock
 
 import aiohttp
 from aiohttp.test_utils import make_mocked_coro
 
 import pyavanza
+import tests.common as common
 
 
-def sync(coro):
-    """Use this wrapper to run an test asynchronously."""
-
-    def wrapper(*args, **kwargs):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(coro(*args, **kwargs))
-
-    return wrapper
-
-
-class TestStockAsync(unittest.TestCase):
+class TestStockAsync(common.TestCase):
     """Tests that retrieve stock information asynchronously."""
-
-    def shortDescription(self):
-        """Disable printing of docstring in test runner."""
-        return None
 
     def setUp(self):
         """Set up, runs before each test."""
@@ -33,7 +18,7 @@ class TestStockAsync(unittest.TestCase):
         mock_get = make_mocked_coro()
         self.mock_session.get = mock_get
 
-    @sync
+    @common.sync
     async def test_get_stock_fail_request_error(self):
         """Test that triggers a request error."""
         id = 1234
@@ -45,7 +30,7 @@ class TestStockAsync(unittest.TestCase):
             pyavanza.AVANZA_API_STOCK_URL.format(id=id), raise_for_status=True
         )
 
-    @sync
+    @common.sync
     async def test_get_stock_fail_response_error(self):
         """Test that triggers a response error.."""
         id = 1234
@@ -57,7 +42,7 @@ class TestStockAsync(unittest.TestCase):
             pyavanza.AVANZA_API_STOCK_URL.format(id=id), raise_for_status=True
         )
 
-    @sync
+    @common.sync
     async def test_get_stock_parse_error(self):
         """Test that triggers a parse error."""
         id = 1234
@@ -69,7 +54,7 @@ class TestStockAsync(unittest.TestCase):
         with self.assertRaises(pyavanza.AvanzaParseError):
             await pyavanza.get_stock_async(self.mock_session, id)
 
-    @sync
+    @common.sync
     async def test_get_stock_success(self):
         """Test a successful request and response."""
         id = 1234

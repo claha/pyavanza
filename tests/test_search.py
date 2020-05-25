@@ -1,18 +1,14 @@
 """Test search."""
 import json
-import unittest
 import urllib.error
 from unittest.mock import patch
 
 import pyavanza
+import tests.common as common
 
 
-class TestSearch(unittest.TestCase):
+class TestSearch(common.TestCase):
     """Tests that search for instruments."""
-
-    def shortDescription(self):
-        """Disable printing of docstring in test runner."""
-        return None
 
     @patch("pyavanza.urllib.request.urlopen")
     def test_search_fail_request_error(self, mock_urlopen):

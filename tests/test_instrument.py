@@ -1,14 +1,10 @@
 """Test instrument."""
-import unittest
-
 import pyavanza
+import tests.common as common
 
 
-class TestInstrument(unittest.TestCase):
+class TestInstrument(common.TestCase):
     """Test that creates an instrument."""
-
-    def shortDescription(self):
-        """Disable printing of docstring in test runner."""
 
     def test_instrument_no_data(self):
         """Test create Instrument without data."""
