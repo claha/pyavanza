@@ -1,18 +1,14 @@
 """Test stock."""
 import json
-import unittest
 import urllib.error
 from unittest.mock import patch
 
 import pyavanza
+import tests.common as common
 
 
-class TestStock(unittest.TestCase):
+class TestStock(common.TestCase):
     """Tests that retrieve stock information."""
-
-    def shortDescription(self):
-        """Disable printing of docstring in test runner."""
-        return None
 
     @patch("pyavanza.urllib.request.urlopen")
     def test_get_stock_fail_request_error(self, mock_urlopen):

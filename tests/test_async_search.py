@@ -1,31 +1,16 @@
 """Test stock search."""
-import asyncio
 import json
-import unittest
 from unittest.mock import Mock
 
 import aiohttp
 from aiohttp.test_utils import make_mocked_coro
 
 import pyavanza
+import tests.common as common
 
 
-def sync(coro):
-    """Use this wrapper to run an test asynchronously."""
-
-    def wrapper(*args, **kwargs):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(coro(*args, **kwargs))
-
-    return wrapper
-
-
-class TestSearchAsync(unittest.TestCase):
+class TestSearchAsync(common.TestCase):
     """Tests that search for instruments asynchronously."""
-
-    def shortDescription(self):
-        """Disable printing of docstring in test runner."""
-        return None
 
     def setUp(self):
         """Set up, runs before each test."""
@@ -33,7 +18,7 @@ class TestSearchAsync(unittest.TestCase):
         mock_get = make_mocked_coro()
         self.mock_session.get = mock_get
 
-    @sync
+    @common.sync
     async def test_search_fail_request_error(self):
         """Test that triggers a request error."""
         query = "test"
@@ -47,7 +32,7 @@ class TestSearchAsync(unittest.TestCase):
             raise_for_status=True,
         )
 
-    @sync
+    @common.sync
     async def test_search_fail_response_error(self):
         """Test that triggers a response error."""
         query = "test"
@@ -61,7 +46,7 @@ class TestSearchAsync(unittest.TestCase):
             raise_for_status=True,
         )
 
-    @sync
+    @common.sync
     async def test_search_fail_parse_error(self):
         """Test that triggers a parse error."""
         query = "test"
@@ -77,7 +62,7 @@ class TestSearchAsync(unittest.TestCase):
                 self.mock_session, query, limit=limit, instrument=instrument
             )
 
-    @sync
+    @common.sync
     async def test_search_success_no_hits(self):
         """Test a successful request and response without hits."""
         query = "test"
@@ -100,7 +85,7 @@ class TestSearchAsync(unittest.TestCase):
             raise_for_status=True,
         )
 
-    @sync
+    @common.sync
     async def test_search_success_low_limit(self):
         """Test a successful request and response, limit is lower than number of hits."""
         query = "test"
@@ -135,7 +120,7 @@ class TestSearchAsync(unittest.TestCase):
             raise_for_status=True,
         )
 
-    @sync
+    @common.sync
     async def test_search_success(self):
         """Test a successful request and response."""
         query = "test"
