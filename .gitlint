@@ -1,9 +1,5 @@
 [general]
 ignore=body-is-missing
-ignore-merge-commits=true
 
 [title-max-length]
 line-length=50
-
-[ignore-by-title]
-regex=^Merge(.*)into(.*)
