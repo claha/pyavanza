@@ -1,0 +1,2 @@
+aiohttp>=3.6.1
+coverage==5.1
