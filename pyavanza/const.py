@@ -2,6 +2,7 @@
 from enum import Enum
 
 AVANZA_API_BASE_URL = "https://www.avanza.se/_mobile/market"
+AVANZA_API_FUND_URL = AVANZA_API_BASE_URL + "/fund/{id}"
 AVANZA_API_STOCK_URL = AVANZA_API_BASE_URL + "/stock/{id}"
 AVANZA_API_SEARCH_URL = AVANZA_API_BASE_URL + "/search?query={query}&limit={limit}"
 AVANZA_API_SEARCH_INSTRUMENT_URL = (
