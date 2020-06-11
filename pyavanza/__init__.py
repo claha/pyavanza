@@ -10,6 +10,7 @@ import aiohttp
 
 from pyavanza.const import (
     AVANZA_API_FUND_URL,
+    AVANZA_API_INDEX_URL,
     AVANZA_API_SEARCH_INSTRUMENT_URL,
     AVANZA_API_SEARCH_URL,
     AVANZA_API_STOCK_URL,
@@ -17,6 +18,7 @@ from pyavanza.const import (
 )
 from pyavanza.error import AvanzaParseError, AvanzaRequestError, AvanzaResponseError
 from pyavanza.fund import Fund
+from pyavanza.index import Index
 from pyavanza.instrument import Instrument, parse_instruments
 from pyavanza.stock import Stock
 
@@ -77,6 +79,13 @@ def get_stock(id: int) -> Stock:
     return Stock(data)
 
 
+def get_index(id: int) -> Index:
+    """Get latest information of a index."""
+    url = AVANZA_API_INDEX_URL.format(id=id)
+    data = _api_call(url)
+    return Index(data)
+
+
 def search(
     query: str, limit: int = -1, instrument: InstrumentType = InstrumentType.ANY
 ) -> List[Instrument]:
@@ -98,6 +107,13 @@ async def get_stock_async(session: aiohttp.ClientSession, id: int) -> Stock:
     url = AVANZA_API_STOCK_URL.format(id=id)
     data = await _api_call_async(session, url)
     return Stock(data)
+
+
+async def get_index_async(session: aiohttp.ClientSession, id: int) -> Index:
+    """Get latest information of a stock asynchronously."""
+    url = AVANZA_API_INDEX_URL.format(id=id)
+    data = await _api_call_async(session, url)
+    return Index(data)
 
 
 async def search_async(
