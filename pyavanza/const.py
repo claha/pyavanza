@@ -8,6 +8,7 @@ AVANZA_API_SEARCH_URL = AVANZA_API_BASE_URL + "/search?query={query}&limit={limi
 AVANZA_API_SEARCH_INSTRUMENT_URL = (
     AVANZA_API_BASE_URL + "/search/{instrument}?query={query}&limit={limit}"
 )
+AVANZA_API_INDEX_URL = AVANZA_API_BASE_URL + "/index/{id}"
 
 
 class InstrumentType(Enum):
