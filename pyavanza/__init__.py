@@ -9,12 +9,14 @@ from typing import Any, Dict, List
 import aiohttp
 
 from pyavanza.const import (
+    AVANZA_API_FUND_URL,
     AVANZA_API_SEARCH_INSTRUMENT_URL,
     AVANZA_API_SEARCH_URL,
     AVANZA_API_STOCK_URL,
     InstrumentType,
 )
 from pyavanza.error import AvanzaParseError, AvanzaRequestError, AvanzaResponseError
+from pyavanza.fund import Fund
 from pyavanza.instrument import Instrument, parse_instruments
 from pyavanza.stock import Stock
 
@@ -61,6 +63,13 @@ def _create_search_url(query: str, limit: int, instrument: InstrumentType) -> st
     return url
 
 
+def get_fund(id: int) -> Fund:
+    """Get latest information of a fund."""
+    url = AVANZA_API_FUND_URL.format(id=id)
+    data = _api_call(url)
+    return Fund(data)
+
+
 def get_stock(id: int) -> Stock:
     """Get latest information of a stock."""
     url = AVANZA_API_STOCK_URL.format(id=id)
@@ -75,6 +84,13 @@ def search(
     url = _create_search_url(query, limit, instrument)
     data = _api_call(url)
     return parse_instruments(data)
+
+
+async def get_fund_async(session: aiohttp.ClientSession, id: int) -> Fund:
+    """Get latest information of a fund asynchronously."""
+    url = AVANZA_API_FUND_URL.format(id=id)
+    data = await _api_call_async(session, url)
+    return Fund(data)
 
 
 async def get_stock_async(session: aiohttp.ClientSession, id: int) -> Stock:
