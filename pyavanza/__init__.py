@@ -8,7 +8,9 @@ from typing import Any, Dict, List
 
 import aiohttp
 
+from pyavanza.certificate import Certificate
 from pyavanza.const import (
+    AVANZA_API_CERTIFICATE_URL,
     AVANZA_API_FUND_URL,
     AVANZA_API_INDEX_URL,
     AVANZA_API_SEARCH_INSTRUMENT_URL,
@@ -86,6 +88,13 @@ def get_index(id: int) -> Index:
     return Index(data)
 
 
+def get_certificate(id: int) -> Certificate:
+    """Get latest information of a certificate."""
+    url = AVANZA_API_CERTIFICATE_URL.format(id=id)
+    data = _api_call(url)
+    return Certificate(data)
+
+
 def search(
     query: str, limit: int = -1, instrument: InstrumentType = InstrumentType.ANY
 ) -> List[Instrument]:
@@ -114,6 +123,13 @@ async def get_index_async(session: aiohttp.ClientSession, id: int) -> Index:
     url = AVANZA_API_INDEX_URL.format(id=id)
     data = await _api_call_async(session, url)
     return Index(data)
+
+
+async def get_certificate_async(session: aiohttp.ClientSession, id: int) -> Certificate:
+    """Get latest information of a stock asynchronously."""
+    url = AVANZA_API_CERTIFICATE_URL.format(id=id)
+    data = await _api_call_async(session, url)
+    return Certificate(data)
 
 
 async def search_async(
