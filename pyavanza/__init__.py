@@ -11,6 +11,7 @@ import aiohttp
 from pyavanza.certificate import Certificate
 from pyavanza.const import (
     AVANZA_API_CERTIFICATE_URL,
+    AVANZA_API_EXCHANGE_TRADED_FUND_URL,
     AVANZA_API_FUND_URL,
     AVANZA_API_INDEX_URL,
     AVANZA_API_SEARCH_INSTRUMENT_URL,
@@ -19,6 +20,7 @@ from pyavanza.const import (
     InstrumentType,
 )
 from pyavanza.error import AvanzaParseError, AvanzaRequestError, AvanzaResponseError
+from pyavanza.exchangetradedfund import ExchangeTradedFund
 from pyavanza.fund import Fund
 from pyavanza.index import Index
 from pyavanza.instrument import Instrument, parse_instruments
@@ -95,6 +97,13 @@ def get_certificate(id: int) -> Certificate:
     return Certificate(data)
 
 
+def get_exchange_traded_fund(id: int) -> ExchangeTradedFund:
+    """Get latest information of an exchange traded fund."""
+    url = AVANZA_API_EXCHANGE_TRADED_FUND_URL.format(id=id)
+    data = _api_call(url)
+    return ExchangeTradedFund(data)
+
+
 def search(
     query: str, limit: int = -1, instrument: InstrumentType = InstrumentType.ANY
 ) -> List[Instrument]:
@@ -130,6 +139,15 @@ async def get_certificate_async(session: aiohttp.ClientSession, id: int) -> Cert
     url = AVANZA_API_CERTIFICATE_URL.format(id=id)
     data = await _api_call_async(session, url)
     return Certificate(data)
+
+
+async def get_exchange_traded_fund_async(
+    session: aiohttp.ClientSession, id: int
+) -> ExchangeTradedFund:
+    """Get latest information of an exchange traded fund asynchronously."""
+    url = AVANZA_API_EXCHANGE_TRADED_FUND_URL.format(id=id)
+    data = await _api_call_async(session, url)
+    return ExchangeTradedFund(data)
 
 
 async def search_async(
