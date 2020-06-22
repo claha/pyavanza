@@ -89,7 +89,7 @@ class TestIndex(common.TestCase):
 
     def test_index_missinng_data(self):
         """Test create index with missing data."""
-        for key in common.JSON_INDEX_DATA.keys():
+        for key in common.JSON_INDEX_DATA:
             with self.subTest(key=key):
                 data = copy.deepcopy(common.JSON_INDEX_DATA)
                 del data[key]

@@ -109,7 +109,7 @@ class TestExchangeTradedFund(common.TestCase):
 
     def test_exchange_traded_fund_missinng_data(self):
         """Test create exchange_traded_fund with missing data."""
-        for key in common.JSON_EXCHANGE_TRADED_FUND_DATA.keys():
+        for key in common.JSON_EXCHANGE_TRADED_FUND_DATA:
             with self.subTest(key=key):
                 data = copy.deepcopy(common.JSON_EXCHANGE_TRADED_FUND_DATA)
                 del data[key]

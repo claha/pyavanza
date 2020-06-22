@@ -116,7 +116,7 @@ class TestStock(common.TestCase):
 
     def test_stock_missinng_data(self):
         """Test create stock with missing data."""
-        for key in common.JSON_STOCK_DATA.keys():
+        for key in common.JSON_STOCK_DATA:
             with self.subTest(key=key):
                 data = copy.deepcopy(common.JSON_STOCK_DATA)
                 del data[key]
