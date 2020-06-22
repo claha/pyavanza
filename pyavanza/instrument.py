@@ -8,16 +8,16 @@ from pyavanza.error import AvanzaParseError
 class Instrument:
     """Instrument object."""
 
-    def __init__(self, type: InstrumentType, json_data: Dict[str, Any]) -> None:
+    def __init__(self, type_: InstrumentType, json_data: Dict[str, Any]) -> None:
         """Initialize instrument object using json data."""
-        self._type = type
+        self._type = type_
         try:
             self._id: str = json_data["id"]
             self._name: str = json_data["name"]
             self._ticker_symbol: str = json_data["tickerSymbol"]
             self._tradable: bool = json_data["tradable"]
-        except KeyError as e:
-            raise AvanzaParseError(e.args[0])
+        except KeyError as exception:
+            raise AvanzaParseError(exception.args[0])
 
     def __str__(self) -> str:
         """Print the object as a string."""

@@ -107,7 +107,7 @@ class TestCertificate(common.TestCase):
 
     def test_certificate_missinng_data(self):
         """Test create certificate with missing data."""
-        for key in common.JSON_CERTIFICATE_DATA.keys():
+        for key in common.JSON_CERTIFICATE_DATA:
             with self.subTest(key=key):
                 data = copy.deepcopy(common.JSON_CERTIFICATE_DATA)
                 del data[key]

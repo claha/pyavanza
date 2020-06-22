@@ -10,7 +10,7 @@ import pyavanza
 import tests.common as common
 
 
-class TestExchange_traded_fundAsync(common.TestCase):
+class TestExchangeTradedFundAsync(common.TestCase):
     """Tests that retrieve exchange traded fund information asynchronously."""
 
     def setUp(self):

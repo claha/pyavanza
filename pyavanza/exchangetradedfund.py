@@ -26,8 +26,8 @@ class ExchangeTradedFund:
             self._total_value_traded: float = json_data["totalValueTraded"]
             self._total_volume_traded: int = json_data["totalVolumeTraded"]
             self._tradable: bool = json_data["tradable"]
-        except KeyError as e:
-            raise AvanzaParseError(e.args[0])
+        except KeyError as exception:
+            raise AvanzaParseError(exception.args[0])
 
         # Not all exchange traded funds have a category
         self._asset_root_category: str = json_data.get("assetRootCategory", None)

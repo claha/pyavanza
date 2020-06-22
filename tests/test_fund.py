@@ -101,7 +101,7 @@ class TestFund(common.TestCase):
 
     def test_fund_missinng_data(self):
         """Test create fund with missing data."""
-        for key in common.JSON_FUND_DATA.keys():
+        for key in common.JSON_FUND_DATA:
             with self.subTest(key=key):
                 data = copy.deepcopy(common.JSON_FUND_DATA)
                 del data[key]
