@@ -34,6 +34,7 @@ jobs:
       - run: black .
       - run: flake8 --count
       - run: isort --check-only
+      - run: pylint pyavanza
       - run: mypy
       - run: yamllint .
       - run: gitlint
