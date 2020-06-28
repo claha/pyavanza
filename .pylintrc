@@ -1,0 +1,16 @@
+[BASIC]
+good-names=id
+
+[MESSAGE CONTROL]
+disable=
+  duplicate-code,
+  too-many-instance-attributes,
+  too-many-public-methods,
+  too-many-statements,
+  C0330
+
+[REPORTS]
+score=no
+
+[FORMAT]
+expected-line-ending-format=LF
