@@ -31,7 +31,7 @@ jobs:
           python3 -m pip install --upgrade pip
           pip3 install -r requirements_lint.txt
 
-      - run: black .
+      - run: black --check .
       - run: flake8 --count
       - run: isort --check-only
       - run: pylint pyavanza
