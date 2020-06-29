@@ -1,4 +1,5 @@
 # pyavanza
+
 ![Version](https://img.shields.io/pypi/v/pyavanza)
 ![Downloads](https://pepy.tech/badge/pyavanza)
 ![License](https://img.shields.io/github/license/claha/pyavanza.svg)
@@ -11,6 +12,7 @@ A Python wrapper around the Avanza mobile API
 ## Examples
 
 ### Search
+
 ```python
 import pyavanza
 
@@ -28,6 +30,7 @@ for instrument in instruments:
 ```
 
 ### Search (asynchronously)
+
 ```python
 import asyncio
 import aiohttp
