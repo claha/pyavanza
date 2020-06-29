@@ -134,7 +134,9 @@ async def get_index_async(session: aiohttp.ClientSession, id_: int) -> Index:
     return Index(data)
 
 
-async def get_certificate_async(session: aiohttp.ClientSession, id_: int) -> Certificate:
+async def get_certificate_async(
+    session: aiohttp.ClientSession, id_: int
+) -> Certificate:
     """Get latest information of a stock asynchronously."""
     url = AVANZA_API_CERTIFICATE_URL.format(id=id_)
     data = await _api_call_async(session, url)
