@@ -37,3 +37,9 @@ jobs:
       - run: |
           coverage run
           coverage report
+
+      - run: |
+          mutmut run --runner "python3 -m unittest"
+
+      - run: |
+          mutmut results
