@@ -32,7 +32,7 @@ jobs:
 
       - run: |
           python3 -m pip install --upgrade pip
-          pip3 install -r requirements_lint.txt
+          pip3 install -r requirements_lint.txt bandit
 
       - run: black --check .
       - run: flake8 --count
@@ -43,6 +43,7 @@ jobs:
       - run: codespell --skip=".git,.mypy_cache"
       - run: yamllint .
       - run: gitlint
+      - run: bandit -r .
 
       - uses: actions/setup-node@v1
         with:
