@@ -17,7 +17,7 @@ class Instrument:
             self._ticker_symbol: str = json_data["tickerSymbol"]
             self._tradable: bool = json_data["tradable"]
         except KeyError as exception:
-            raise AvanzaParseError(exception.args[0])
+            raise AvanzaParseError(exception.args[0]) from exception
 
     def __str__(self) -> str:
         """Print the object as a string."""

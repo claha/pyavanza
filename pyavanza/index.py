@@ -18,7 +18,7 @@ class Index:
             self._push_permitted: bool = json_data["pushPermitted"]
             self._quote_updated: str = json_data["quoteUpdated"]
         except KeyError as exception:
-            raise AvanzaParseError(exception.args[0])
+            raise AvanzaParseError(exception.args[0]) from exception
 
         self._description: str = json_data.get("description", None)
         self._flag_code: str = json_data.get("flagCode", None)

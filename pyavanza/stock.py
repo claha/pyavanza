@@ -42,7 +42,7 @@ class Stock:
             self._total_volume_traded: int = json_data["totalVolumeTraded"]
             self._tradable: bool = json_data["tradable"]
         except KeyError as exception:
-            raise AvanzaParseError(exception.args[0])
+            raise AvanzaParseError(exception.args[0]) from exception
 
         # Could be missing if no transactions have been made
         self._buy_price: float = json_data.get("buyPrice", None)

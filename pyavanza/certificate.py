@@ -27,7 +27,7 @@ class Certificate:
             self._total_volume_traded: int = json_data["totalVolumeTraded"]
             self._tradable: bool = json_data["tradable"]
         except KeyError as exception:
-            raise AvanzaParseError(exception.args[0])
+            raise AvanzaParseError(exception.args[0]) from exception
 
         # Not all certificate have an administration fee
         self._administration_fee: float = json_data.get("administrationFee", None)
