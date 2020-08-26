@@ -35,7 +35,7 @@ class Fund:
             self._start_date: str = json_data["startDate"]
             self._trading_currency: str = json_data["tradingCurrency"]
         except KeyError as exception:
-            raise AvanzaParseError(exception.args[0])
+            raise AvanzaParseError(exception.args[0]) from exception
 
         # Could be missing if fund has not been on the market long enough
         self._change_since_five_years: float = json_data.get(

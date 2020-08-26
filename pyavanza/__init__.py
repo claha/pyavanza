@@ -34,13 +34,13 @@ def _api_call(url: str) -> Dict[str, Any]:
     try:
         resp = urllib.request.urlopen(url).read()
     except urllib.error.HTTPError as exception:
-        raise AvanzaResponseError(exception.code, exception.reason)
+        raise AvanzaResponseError(exception.code, exception.reason) from exception
     except urllib.error.URLError as exception:
-        raise AvanzaRequestError(str(exception))
+        raise AvanzaRequestError(str(exception)) from exception
     try:
         return json.loads(resp.decode())  # type: ignore
     except json.JSONDecodeError as exception:
-        raise AvanzaParseError(str(exception))
+        raise AvanzaParseError(str(exception)) from exception
 
 
 async def _api_call_async(session: aiohttp.ClientSession, url: str) -> Dict[str, Any]:
@@ -48,13 +48,13 @@ async def _api_call_async(session: aiohttp.ClientSession, url: str) -> Dict[str,
     try:
         resp = await session.get(url, raise_for_status=True)
     except aiohttp.ClientResponseError as exception:
-        raise AvanzaResponseError(exception.status, exception.message)
+        raise AvanzaResponseError(exception.status, exception.message) from exception
     except aiohttp.ClientConnectionError as exception:
-        raise AvanzaRequestError(str(exception))
+        raise AvanzaRequestError(str(exception)) from exception
     try:
         return await resp.json()  # type: ignore
     except json.JSONDecodeError as exception:
-        raise AvanzaParseError(str(exception))
+        raise AvanzaParseError(str(exception)) from exception
 
 
 def _create_search_url(query: str, limit: int, instrument: InstrumentType) -> str:
