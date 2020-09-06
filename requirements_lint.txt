@@ -4,6 +4,6 @@ flake8==3.8.3
 flake8-docstrings==1.5.0
 gitlint==0.13.1
 isort==5.4.2
-mypy==0.770
+mypy==0.782
 pylint==2.6.0
 yamllint==1.23.0
