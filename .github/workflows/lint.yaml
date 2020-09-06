@@ -37,6 +37,7 @@ jobs:
       - run: pylint pyavanza
       - run: mypy
       - run: pyupgrade pyavanza/*.py
+      - run: codespell --skip=".git,.mypy_cache"
       - run: yamllint .
       - run: gitlint
 
