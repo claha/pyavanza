@@ -65,7 +65,7 @@ class Fund:
         self._risk_level: str = json_data.get("riskLevel", None)
         self._sharpe_ratio: float = json_data.get("sharpeRatio", None)
         self._standard_deviation: float = json_data.get("standardDeviation", None)
-        # Not all funds specifiy this
+        # Not all funds specify this
         self._sub_category: str = json_data.get("subCategory", None)
         self._type: str = json_data.get("type", None)
 
