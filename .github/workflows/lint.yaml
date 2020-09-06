@@ -36,6 +36,7 @@ jobs:
       - run: isort --check-only .
       - run: pylint pyavanza
       - run: mypy
+      - run: pyupgrade pyavanza/*.py
       - run: yamllint .
       - run: gitlint
 
