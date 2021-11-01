@@ -1,4 +1,4 @@
-aiohttp>=3.6.1
+aiohttp>=3.7.4.post0
 black==20.8b1
 codespell==1.17.1
 flake8==3.8.3
