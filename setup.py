@@ -2,7 +2,7 @@
 from setuptools import find_packages, setup
 
 NAME = "pyavanza"
-VERSION = "0.3.0"
+VERSION = "0.3.1"
 LICENSE = "MIT License"
 AUTHOR = "Claes Hallstrom"
 URL = "https://github.com/claha/pyavanza"
