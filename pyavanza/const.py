@@ -1,7 +1,7 @@
 """Constants used in pyavanza."""
 from enum import Enum
 
-AVANZA_API_BASE_URL = "https://www.avanza.se/_mobile/market"
+AVANZA_API_BASE_URL = "https://www.avanza.se/_api/market-guide"
 AVANZA_API_CERTIFICATE_URL = AVANZA_API_BASE_URL + "/certificate/{id}"
 AVANZA_API_EXCHANGE_TRADED_FUND_URL = AVANZA_API_BASE_URL + "/exchange_traded_fund/{id}"
 AVANZA_API_FUND_URL = AVANZA_API_BASE_URL + "/fund/{id}"
