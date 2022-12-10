@@ -8,7 +8,7 @@ from typing import Any, Dict
 import aiohttp
 
 LOGGER = logging.getLogger(__name__)
-AVANZA_API_BASE_URL = "https://www.avanza.se/_mobile/market"
+AVANZA_API_BASE_URL = "https://www.avanza.se/_api/market-guide"
 AVANZA_API_STOCK_URL = AVANZA_API_BASE_URL + "/stock/{id}"
 
 
