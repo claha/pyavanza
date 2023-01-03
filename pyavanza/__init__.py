@@ -1,4 +1,4 @@
-"""A Python wrapper around the Avanza mobile API."""
+"""A Python wrapper around the Avanza API."""
 import json
 import logging
 import urllib.error
@@ -8,13 +8,11 @@ from typing import Any, Dict
 import aiohttp
 
 LOGGER = logging.getLogger(__name__)
-AVANZA_API_BASE_URL = "https://www.avanza.se/_api/market-guide"
-AVANZA_API_STOCK_URL = AVANZA_API_BASE_URL + "/stock/{id}"
+AVANZA_API_INSTRUMENT_URL = "https://www.avanza.se/_api/market-guide/{instrument_type}/{id}"
 
-
-def get_stock(id: int) -> Dict[str, Any]:
-    """Get latest information of a stock."""
-    url = AVANZA_API_STOCK_URL.format(id=id)
+def get_instrument(instrument_type: str, id: int) -> Dict[str, Any]:
+    """Get latest information."""
+    url = AVANZA_API_INSTRUMENT_URL.format(instrument_type=instrument_type, id=id)
     try:
         resp = urllib.request.urlopen(url).read()
         return json.loads(resp.decode())  # type: ignore
@@ -25,9 +23,9 @@ def get_stock(id: int) -> Dict[str, Any]:
     return {}
 
 
-async def get_stock_async(session: aiohttp.ClientSession, id: int) -> Dict[str, Any]:
-    """Get latest information of a stock asynchronously."""
-    url = AVANZA_API_STOCK_URL.format(id=id)
+async def get_instrument_async(session: aiohttp.ClientSession, instrument_type: str, id: int) -> Dict[str, Any]:
+    """Get latest information asynchronously."""
+    url = AVANZA_API_INSTRUMENT_URL.format(instrument_type=instrument_type, id=id)
     try:
         resp = await session.get(url, raise_for_status=True)
         return await resp.json()  # type: ignore
