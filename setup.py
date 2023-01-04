@@ -2,13 +2,13 @@
 from setuptools import find_packages, setup
 
 NAME = "pyavanza"
-VERSION = "0.3.1"
+VERSION = "0.4.0"
 LICENSE = "MIT License"
 AUTHOR = "Claes Hallstrom"
 URL = "https://github.com/claha/pyavanza"
 EMAIL = "hallstrom.claes@gmail.com"
 
-DESCRIPTION = "A Python wrapper around the Avanza mobile API"
+DESCRIPTION = "A python wrapper around the avanza api."
 
 PACKAGES = find_packages()
 PACKAGE_DATA = {"pyavanza": ["py.typed"]}

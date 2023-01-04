@@ -1,5 +1,5 @@
 ---
-name: Build
+name: Run pre-commit hooks
 
 on:  # yamllint disable-line rule:truthy
   push:
@@ -8,16 +8,11 @@ on:  # yamllint disable-line rule:truthy
   pull_request:
 
 jobs:
-  build:
+  pre-commit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
       - uses: actions/setup-python@v4.3.0
         with:
           python-version: 3.x
-      - run: |
-          python3 -m pip install --upgrade pip
-          pip3 --version
-          pip3 install setuptools wheel
-          pip3 show setuptools wheel
-          python3 setup.py sdist bdist_wheel
+      - uses: pre-commit/action@v3.0.0
