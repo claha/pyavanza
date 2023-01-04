@@ -5,7 +5,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-import aiohttp  # pylint: disable=import-error
+import aiohttp
 
 LOGGER = logging.getLogger(__name__)
 AVANZA_API_STOCK_URL = "https://www.avanza.se/_api/market-guide/stock/{orderbook_id}"
@@ -16,7 +16,7 @@ def get_stock(orderbook_id: int) -> dict[str, Any]:
     url = AVANZA_API_STOCK_URL.format(orderbook_id=orderbook_id)
     try:
         with urllib.request.urlopen(url) as resp:
-            return json.loads(resp.decode())  # type: ignore
+            return json.loads(resp.read().decode("utf-8"))  # type: ignore
     except urllib.error.HTTPError as error:
         LOGGER.warning("HTTP Error %d: %s", error.code, error.reason)
     except urllib.error.URLError as error:

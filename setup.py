@@ -14,7 +14,7 @@ PACKAGES = find_packages()
 PACKAGE_DATA = {"pyavanza": ["py.typed"]}
 
 REQUIRES = [
-    "aiohttp>=3.7.4.post0",
+    "aiohttp>=3.8.1",
 ]
 
 CLASSIFIERS = [
