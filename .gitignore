@@ -1,6 +1,7 @@
+.coverage
 .mypy_cache
 .venv
+__pycache__
 build
 dist
 pyavanza.egg-info
-pyavanza/__pycache__
