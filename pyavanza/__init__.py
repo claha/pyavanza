@@ -11,9 +11,8 @@ LOGGER = logging.getLogger(__name__)
 AVANZA_API_STOCK_URL = "https://www.avanza.se/_api/market-guide/stock/{orderbook_id}"
 
 
-def get_stock(orderbook_id: int) -> dict[str, Any]:
-    """Get latest information of a stock."""
-    url = AVANZA_API_STOCK_URL.format(orderbook_id=orderbook_id)
+def get_url(url: str) -> dict[str, Any]:
+    """Get url."""
     try:
         with urllib.request.urlopen(url) as resp:
             return json.loads(resp.read().decode("utf-8"))  # type: ignore
@@ -24,11 +23,8 @@ def get_stock(orderbook_id: int) -> dict[str, Any]:
     return {}
 
 
-async def get_stock_async(
-    session: aiohttp.ClientSession, orderbook_id: int
-) -> dict[str, Any]:
-    """Get latest information of a stock asynchronously."""
-    url = AVANZA_API_STOCK_URL.format(orderbook_id=orderbook_id)
+async def get_url_async(session: aiohttp.ClientSession, url: str) -> dict[str, Any]:
+    """Get url asynchronously."""
     try:
         resp = await session.get(url, raise_for_status=True)
         return await resp.json()  # type: ignore
@@ -37,3 +33,17 @@ async def get_stock_async(
     except aiohttp.ClientConnectionError as error:
         LOGGER.warning("Connection Error: %s", error)
     return {}
+
+
+def get_stock(orderbook_id: int) -> dict[str, Any]:
+    """Get latest information of a stock."""
+    url = AVANZA_API_STOCK_URL.format(orderbook_id=orderbook_id)
+    return get_url(url)
+
+
+async def get_stock_async(
+    session: aiohttp.ClientSession, orderbook_id: int
+) -> dict[str, Any]:
+    """Get latest information of a stock asynchronously."""
+    url = AVANZA_API_STOCK_URL.format(orderbook_id=orderbook_id)
+    return await get_url_async(session, url)
