@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.20.0
+    rev: 0.22.0
     hooks:
       - id: check-github-workflows
 
@@ -19,19 +19,19 @@ repos:
           - --unique
 
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.28.0
+    rev: v1.29.0
     hooks:
       - id: yamllint
         args:
           - --strict
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.32.2
+    rev: v0.33.0
     hooks:
       - id: markdownlint
 
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 23.1.0
     hooks:
       - id: black
 
@@ -47,7 +47,7 @@ repos:
           - --ignore=E501,E203,W503
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.11.4
+    rev: 5.12.0
     hooks:
       - id: isort
         args:
@@ -59,12 +59,12 @@ repos:
       - id: pyupgrade
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.2
+    rev: v2.2.4
     hooks:
       - id: codespell
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.991
+    rev: v1.1.1
     hooks:
       - id: mypy
         files: pyavanza/
@@ -73,7 +73,7 @@ repos:
           - --ignore-missing-imports
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.209
+    rev: v0.0.255
     hooks:
       - id: ruff
 
