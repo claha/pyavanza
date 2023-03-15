@@ -10,6 +10,8 @@ import pyavanza
 ORDERBOOK_ID_AVANZA_BANK_HOLDING = 5361
 ORDERBOOK_ID_XACT_BEAR = 12251
 ORDERBOOK_ID_XACT_BULL = 12252
+ORDERBOOK_ID_OMX_STOCKHOLM_30 = 19002
+ORDERBOOK_ID_USD_SEK = 19000
 
 ORDERBOOK_IDS_STOCK = [
     ORDERBOOK_ID_AVANZA_BANK_HOLDING,
@@ -17,6 +19,10 @@ ORDERBOOK_IDS_STOCK = [
 ORDERBOOK_IDS_ETF = [
     ORDERBOOK_ID_XACT_BEAR,
     ORDERBOOK_ID_XACT_BULL,
+]
+ORDERBOOK_IDS_INDEX = [
+    ORDERBOOK_ID_OMX_STOCKHOLM_30,
+    ORDERBOOK_ID_USD_SEK,
 ]
 
 
@@ -32,6 +38,13 @@ def check_etf_info(info, orderbook_id):
     assert isinstance(info, dict)
     assert int(info["orderbookId"]) == orderbook_id
     assert info["type"] == "EXCHANGE_TRADED_FUND"
+
+
+def check_index_info(info, orderbook_id):
+    """Check retrieved index info."""
+    assert isinstance(info, dict)
+    assert int(info["orderbookId"]) == orderbook_id
+    assert info["type"] == "INDEX"
 
 
 def make_mocked_session(mocker):
@@ -71,6 +84,13 @@ def test_get_etf(orderbook_id):
     check_etf_info(info, orderbook_id)
 
 
+@pytest.mark.parametrize("orderbook_id", ORDERBOOK_IDS_INDEX)
+def test_get_index(orderbook_id):
+    """Retrieve and check index info."""
+    info = pyavanza.get_index(orderbook_id)
+    check_index_info(info, orderbook_id)
+
+
 @pytest.mark.asyncio
 async def test_get_url_async_client_response_error(mocker):
     """Check that client response error is handled."""
@@ -105,3 +125,12 @@ async def test_get_etf_async(orderbook_id):
     async with aiohttp.ClientSession() as session:
         info = await pyavanza.get_etf_async(session, orderbook_id)
         check_etf_info(info, orderbook_id)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("orderbook_id", ORDERBOOK_IDS_INDEX)
+async def test_get_index_async(orderbook_id):
+    """Retrieve and check index info async."""
+    async with aiohttp.ClientSession() as session:
+        info = await pyavanza.get_index_async(session, orderbook_id)
+        check_index_info(info, orderbook_id)

@@ -8,9 +8,13 @@ from typing import Any
 import aiohttp
 
 LOGGER = logging.getLogger(__name__)
-AVANZA_API_MARKET_GUIDE = "https://www.avanza.se/_api/market-guide"
-AVANZA_API_STOCK_URL = AVANZA_API_MARKET_GUIDE + "/stock/{orderbook_id}"
-AVANZA_API_ETF_URL = AVANZA_API_MARKET_GUIDE + "/exchangetradedfund/{orderbook_id}"
+
+AVANZA_API_ENDPOINT = "https://www.avanza.se/_api"
+AVANZA_API_STOCK_URL = AVANZA_API_ENDPOINT + "/market-guide/stock/{orderbook_id}"
+AVANZA_API_ETF_URL = (
+    AVANZA_API_ENDPOINT + "/market-guide/exchangetradedfund/{orderbook_id}"
+)
+AVANZA_API_INDEX_URL = AVANZA_API_ENDPOINT + "/market-index/{orderbook_id}"
 
 
 def get_url(url: str) -> dict[str, Any]:
@@ -62,4 +66,18 @@ async def get_etf_async(
 ) -> dict[str, Any]:
     """Get latest information of an etf asynchronously."""
     url = AVANZA_API_ETF_URL.format(orderbook_id=orderbook_id)
+    return await get_url_async(session, url)
+
+
+def get_index(orderbook_id: int) -> dict[str, Any]:
+    """Get latest information of an index."""
+    url = AVANZA_API_INDEX_URL.format(orderbook_id=orderbook_id)
+    return get_url(url)
+
+
+async def get_index_async(
+    session: aiohttp.ClientSession, orderbook_id: int
+) -> dict[str, Any]:
+    """Get latest information of an index asynchronously."""
+    url = AVANZA_API_INDEX_URL.format(orderbook_id=orderbook_id)
     return await get_url_async(session, url)
