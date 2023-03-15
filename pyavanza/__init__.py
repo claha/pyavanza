@@ -8,10 +8,9 @@ from typing import Any
 import aiohttp
 
 LOGGER = logging.getLogger(__name__)
-AVANZA_API_STOCK_URL = "https://www.avanza.se/_api/market-guide/stock/{orderbook_id}"
-AVANZA_API_STOCK_URL = (
-    "https://www.avanza.se/_api/market-guide/exchangetradedfund/{orderbook_id}"
-)
+AVANZA_API_MARKET_GUIDE = "https://www.avanza.se/_api/market-guide"
+AVANZA_API_STOCK_URL = AVANZA_API_MARKET_GUIDE + "/stock/{orderbook_id}"
+AVANZA_API_ETF_URL = AVANZA_API_MARKET_GUIDE + "/exchangetradedfund/{orderbook_id}"
 
 
 def get_url(url: str) -> dict[str, Any]:
