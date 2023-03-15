@@ -11,17 +11,27 @@ ORDERBOOK_ID_AVANZA_BANK_HOLDING = 5361
 ORDERBOOK_ID_XACT_BEAR = 12251
 ORDERBOOK_ID_XACT_BULL = 12252
 
+ORDERBOOK_IDS_STOCK = [
+    ORDERBOOK_ID_AVANZA_BANK_HOLDING,
+]
+ORDERBOOK_IDS_ETF = [
+    ORDERBOOK_ID_XACT_BEAR,
+    ORDERBOOK_ID_XACT_BULL,
+]
+
 
 def check_stock_info(info, orderbook_id):
     """Check retrieved stock info."""
     assert isinstance(info, dict)
     assert int(info["orderbookId"]) == orderbook_id
+    assert info["type"] == "STOCK"
 
 
 def check_etf_info(info, orderbook_id):
     """Check retrieved etf info."""
     assert isinstance(info, dict)
     assert int(info["orderbookId"]) == orderbook_id
+    assert info["type"] == "EXCHANGE_TRADED_FUND"
 
 
 def make_mocked_session(mocker):
@@ -47,16 +57,14 @@ def test_get_url_url_error(mocker):
     assert info == {}
 
 
-@pytest.mark.parametrize("orderbook_id", [ORDERBOOK_ID_AVANZA_BANK_HOLDING])
+@pytest.mark.parametrize("orderbook_id", ORDERBOOK_IDS_STOCK)
 def test_get_stock(orderbook_id):
     """Retrieve and check stock info."""
     info = pyavanza.get_stock(orderbook_id)
     check_stock_info(info, orderbook_id)
 
 
-@pytest.mark.parametrize(
-    "orderbook_id", [ORDERBOOK_ID_XACT_BEAR, ORDERBOOK_ID_XACT_BULL]
-)
+@pytest.mark.parametrize("orderbook_id", ORDERBOOK_IDS_ETF)
 def test_get_etf(orderbook_id):
     """Retrieve and check etf info."""
     info = pyavanza.get_etf(orderbook_id)
@@ -82,7 +90,7 @@ async def test_get_url_async_client_connection_error(mocker):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("orderbook_id", [ORDERBOOK_ID_AVANZA_BANK_HOLDING])
+@pytest.mark.parametrize("orderbook_id", ORDERBOOK_IDS_STOCK)
 async def test_get_stock_async(orderbook_id):
     """Retrieve and check stock info async."""
     async with aiohttp.ClientSession() as session:
@@ -91,9 +99,7 @@ async def test_get_stock_async(orderbook_id):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize(
-    "orderbook_id", [ORDERBOOK_ID_XACT_BEAR, ORDERBOOK_ID_XACT_BULL]
-)
+@pytest.mark.parametrize("orderbook_id", ORDERBOOK_IDS_ETF)
 async def test_get_etf_async(orderbook_id):
     """Retrieve and check etf info async."""
     async with aiohttp.ClientSession() as session:
