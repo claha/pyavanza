@@ -8,10 +8,18 @@ from aiohttp.test_utils import make_mocked_coro
 import pyavanza
 
 ORDERBOOK_ID_AVANZA_BANK_HOLDING = 5361
+ORDERBOOK_ID_XACT_BEAR = 12251
+ORDERBOOK_ID_XACT_BULL = 12252
 
 
 def check_stock_info(info, orderbook_id):
     """Check retrieved stock info."""
+    assert isinstance(info, dict)
+    assert int(info["orderbookId"]) == orderbook_id
+
+
+def check_etf_info(info, orderbook_id):
+    """Check retrieved etf info."""
     assert isinstance(info, dict)
     assert int(info["orderbookId"]) == orderbook_id
 
@@ -46,6 +54,15 @@ def test_get_stock(orderbook_id):
     check_stock_info(info, orderbook_id)
 
 
+@pytest.mark.parametrize(
+    "orderbook_id", [ORDERBOOK_ID_XACT_BEAR, ORDERBOOK_ID_XACT_BULL]
+)
+def test_get_etf(orderbook_id):
+    """Retrieve and check etf info."""
+    info = pyavanza.get_etf(orderbook_id)
+    check_etf_info(info, orderbook_id)
+
+
 @pytest.mark.asyncio
 async def test_get_url_async_client_response_error(mocker):
     """Check that client response error is handled."""
@@ -71,3 +88,14 @@ async def test_get_stock_async(orderbook_id):
     async with aiohttp.ClientSession() as session:
         info = await pyavanza.get_stock_async(session, orderbook_id)
         check_stock_info(info, orderbook_id)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "orderbook_id", [ORDERBOOK_ID_XACT_BEAR, ORDERBOOK_ID_XACT_BULL]
+)
+async def test_get_etf_async(orderbook_id):
+    """Retrieve and check etf info async."""
+    async with aiohttp.ClientSession() as session:
+        info = await pyavanza.get_etf_async(session, orderbook_id)
+        check_etf_info(info, orderbook_id)
