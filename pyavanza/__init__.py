@@ -3,6 +3,7 @@ import json
 import logging
 import urllib.error
 import urllib.request
+from enum import Enum
 from typing import Any
 
 import aiohttp
@@ -16,6 +17,15 @@ AVANZA_API_ETF_URL = (
 )
 AVANZA_API_INDEX_URL = AVANZA_API_ENDPOINT + "/market-index/{orderbook_id}"
 AVANZA_API_SEARCH_URL = AVANZA_API_ENDPOINT + "/search/global-search?query={query}"
+
+
+class InstrumentType(str, Enum):
+    """Instrument types enum."""
+
+    ExchangeTradedFund = "EXCHANGE_TRADED_FUND"
+    Fund = "FUND"
+    Index = "INDEX"
+    Stock = "STOCK"
 
 
 def get_url(url: str) -> dict[str, Any]:
