@@ -24,6 +24,11 @@ ORDERBOOK_IDS_INDEX = [
     ORDERBOOK_ID_OMX_STOCKHOLM_30,
     ORDERBOOK_ID_USD_SEK,
 ]
+SEARCH_QUERIES = [
+    "avanza",
+    "xact",
+    "omx",
+]
 
 
 def check_stock_info(info, orderbook_id):
@@ -45,6 +50,11 @@ def check_index_info(info, orderbook_id):
     assert isinstance(info, dict)
     assert int(info["orderbookId"]) == orderbook_id
     assert info["type"] == "INDEX"
+
+
+def check_search_info(info, query):
+    """Check search info."""
+    assert info["searchQuery"] == query
 
 
 def make_mocked_session(mocker):
@@ -91,6 +101,13 @@ def test_get_index(orderbook_id):
     check_index_info(info, orderbook_id)
 
 
+@pytest.mark.parametrize("query", SEARCH_QUERIES)
+def test_search(query):
+    """Search for query and check result."""
+    info = pyavanza.search(query)
+    check_search_info(info, query)
+
+
 @pytest.mark.asyncio
 async def test_get_url_async_client_response_error(mocker):
     """Check that client response error is handled."""
@@ -134,3 +151,12 @@ async def test_get_index_async(orderbook_id):
     async with aiohttp.ClientSession() as session:
         info = await pyavanza.get_index_async(session, orderbook_id)
         check_index_info(info, orderbook_id)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("query", SEARCH_QUERIES)
+async def test_search_async(query):
+    """Search for query and check result async."""
+    async with aiohttp.ClientSession() as session:
+        info = await pyavanza.search_async(session, query)
+        check_search_info(info, query)

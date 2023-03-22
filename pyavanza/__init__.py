@@ -15,6 +15,7 @@ AVANZA_API_ETF_URL = (
     AVANZA_API_ENDPOINT + "/market-guide/exchangetradedfund/{orderbook_id}"
 )
 AVANZA_API_INDEX_URL = AVANZA_API_ENDPOINT + "/market-index/{orderbook_id}"
+AVANZA_API_SEARCH_URL = AVANZA_API_ENDPOINT + "/search/global-search?query={query}"
 
 
 def get_url(url: str) -> dict[str, Any]:
@@ -80,4 +81,16 @@ async def get_index_async(
 ) -> dict[str, Any]:
     """Get latest information of an index asynchronously."""
     url = AVANZA_API_INDEX_URL.format(orderbook_id=orderbook_id)
+    return await get_url_async(session, url)
+
+
+def search(query: str) -> dict[str, Any]:
+    """Search for instruments."""
+    url = AVANZA_API_SEARCH_URL.format(query=query)
+    return get_url(url)
+
+
+async def search_async(session: aiohttp.ClientSession, query: str) -> dict[str, Any]:
+    """Search for instruments asynchronously."""
+    url = AVANZA_API_SEARCH_URL.format(query=query)
     return await get_url_async(session, url)
