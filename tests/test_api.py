@@ -35,26 +35,31 @@ def check_stock_info(info, orderbook_id):
     """Check retrieved stock info."""
     assert isinstance(info, dict)
     assert int(info["orderbookId"]) == orderbook_id
-    assert info["type"] == "STOCK"
+    assert info["type"] == pyavanza.InstrumentType.Stock
 
 
 def check_etf_info(info, orderbook_id):
     """Check retrieved etf info."""
     assert isinstance(info, dict)
     assert int(info["orderbookId"]) == orderbook_id
-    assert info["type"] == "EXCHANGE_TRADED_FUND"
+    assert info["type"] == pyavanza.InstrumentType.ExchangeTradedFund
 
 
 def check_index_info(info, orderbook_id):
     """Check retrieved index info."""
     assert isinstance(info, dict)
     assert int(info["orderbookId"]) == orderbook_id
-    assert info["type"] == "INDEX"
+    assert info["type"] == pyavanza.InstrumentType.Index
 
 
 def check_search_info(info, query):
     """Check search info."""
     assert info["searchQuery"] == query
+    hits = info["resultGroups"]
+    for hit in hits:
+        assert isinstance(
+            pyavanza.InstrumentType(hit["instrumentType"]), pyavanza.InstrumentType
+        )
 
 
 def make_mocked_session(mocker):
