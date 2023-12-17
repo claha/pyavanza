@@ -10,7 +10,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
 
@@ -43,15 +43,15 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v4.1.1
 
-      - uses: actions/setup-python@v4.3.0
+      - uses: actions/setup-python@v5.0.0
         with:
           python-version: 3.x
 
       - run: |
           python3 -m pip install --upgrade pip
-          pip3 install setuptools==65.6.3 wheel==0.38.4 twine==4.0.2
+          pip3 install setuptools wheel twine
 
       - env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}

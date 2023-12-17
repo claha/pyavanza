@@ -69,19 +69,19 @@ def make_mocked_session(mocker):
     return mock_session
 
 
-def test_get_url_http_error(mocker):
+def test_request_url_http_error(mocker):
     """Check that http error is handled."""
     mock_urlopen = mocker.patch("pyavanza.urllib.request.urlopen")
     mock_urlopen.side_effect = urllib.error.HTTPError("", 404, "", {}, None)
-    info = pyavanza.get_url("")
+    info = pyavanza.request_url(pyavanza.AVANZA_API_ENDPOINT)
     assert info == {}
 
 
-def test_get_url_url_error(mocker):
+def test_request_url_url_error(mocker):
     """Check that url error is handled."""
     mock_urlopen = mocker.patch("pyavanza.urllib.request.urlopen")
     mock_urlopen.side_effect = urllib.error.URLError("")
-    info = pyavanza.get_url("")
+    info = pyavanza.request_url(pyavanza.AVANZA_API_ENDPOINT)
     assert info == {}
 
 
@@ -114,20 +114,20 @@ def test_search(query):
 
 
 @pytest.mark.asyncio
-async def test_get_url_async_client_response_error(mocker):
+async def test_request_url_async_client_response_error(mocker):
     """Check that client response error is handled."""
     mock_session = make_mocked_session(mocker)
     mock_session.get.side_effect = aiohttp.ClientResponseError(None, None)
-    info = await pyavanza.get_url_async(mock_session, "")
+    info = await pyavanza.request_url_async(mock_session, "")
     assert info == {}
 
 
 @pytest.mark.asyncio
-async def test_get_url_async_client_connection_error(mocker):
+async def test_request_url_async_client_connection_error(mocker):
     """Check that client connection error is handled."""
     mock_session = make_mocked_session(mocker)
     mock_session.get.side_effect = aiohttp.ClientConnectionError(None)
-    info = await pyavanza.get_url_async(mock_session, "")
+    info = await pyavanza.request_url_async(mock_session, "")
     assert info == {}
 
 
