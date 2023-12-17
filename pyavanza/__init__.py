@@ -12,11 +12,9 @@ LOGGER = logging.getLogger(__name__)
 
 AVANZA_API_ENDPOINT = "https://www.avanza.se/_api"
 AVANZA_API_STOCK_URL = AVANZA_API_ENDPOINT + "/market-guide/stock/{orderbook_id}"
-AVANZA_API_ETF_URL = (
-    AVANZA_API_ENDPOINT + "/market-guide/exchangetradedfund/{orderbook_id}"
-)
+AVANZA_API_ETF_URL = AVANZA_API_ENDPOINT + "/market-etf/{orderbook_id}"
 AVANZA_API_INDEX_URL = AVANZA_API_ENDPOINT + "/market-index/{orderbook_id}"
-AVANZA_API_SEARCH_URL = AVANZA_API_ENDPOINT + "/search/global-search?query={query}"
+AVANZA_API_SEARCH_URL = AVANZA_API_ENDPOINT + "/search/global-search?limit={limit}"
 
 
 class InstrumentType(str, Enum):
@@ -25,13 +23,24 @@ class InstrumentType(str, Enum):
     ExchangeTradedFund = "EXCHANGE_TRADED_FUND"
     Fund = "FUND"
     Index = "INDEX"
+    Option = "OPTION"
     Stock = "STOCK"
 
 
-def get_url(url: str) -> dict[str, Any]:
-    """Get url."""
+def request_url(url: str, data: dict[str, Any] = {}) -> dict[str, Any]:
+    """Make a GET or POST request based on the presence of data."""
     try:
-        with urllib.request.urlopen(url) as resp:
+        if data:
+            # If data is provided, make a POST request
+            data_json = json.dumps(data).encode("utf-8")
+            request = urllib.request.Request(
+                url, data=data_json, headers={"Content-Type": "application/json"}
+            )
+        else:
+            # If no data is provided, make a GET request
+            request = urllib.request.Request(url)
+
+        with urllib.request.urlopen(request) as resp:
             return json.loads(resp.read().decode("utf-8"))  # type: ignore
     except urllib.error.HTTPError as error:
         LOGGER.warning("HTTP Error %d: %s", error.code, error.reason)
@@ -40,11 +49,22 @@ def get_url(url: str) -> dict[str, Any]:
     return {}
 
 
-async def get_url_async(session: aiohttp.ClientSession, url: str) -> dict[str, Any]:
-    """Get url asynchronously."""
+async def request_url_async(
+    session: aiohttp.ClientSession, url: str, data: dict[str, Any] = {}
+) -> dict[str, Any]:
+    """Make an asynchronous GET or POST request based on the presence of data."""
     try:
-        resp = await session.get(url, raise_for_status=True)
-        return await resp.json()  # type: ignore
+        if data:
+            # If data is provided, make an asynchronous POST request
+            headers = {"Content-Type": "application/json"}
+            async with session.post(
+                url, data=json.dumps(data).encode("utf-8"), headers=headers
+            ) as resp:
+                return await resp.json()  # type: ignore
+        else:
+            # If no data is provided, make an asynchronous GET request
+            async with session.get(url, raise_for_status=True) as resp:
+                return await resp.json()  # type: ignore
     except aiohttp.ClientResponseError as error:
         LOGGER.warning("Response Error %d: %s", error.status, error.message)
     except aiohttp.ClientConnectionError as error:
@@ -55,7 +75,7 @@ async def get_url_async(session: aiohttp.ClientSession, url: str) -> dict[str, A
 def get_stock(orderbook_id: int) -> dict[str, Any]:
     """Get latest information of a stock."""
     url = AVANZA_API_STOCK_URL.format(orderbook_id=orderbook_id)
-    return get_url(url)
+    return request_url(url)
 
 
 async def get_stock_async(
@@ -63,13 +83,13 @@ async def get_stock_async(
 ) -> dict[str, Any]:
     """Get latest information of a stock asynchronously."""
     url = AVANZA_API_STOCK_URL.format(orderbook_id=orderbook_id)
-    return await get_url_async(session, url)
+    return await request_url_async(session, url)
 
 
 def get_etf(orderbook_id: int) -> dict[str, Any]:
     """Get latest information of an etf."""
     url = AVANZA_API_ETF_URL.format(orderbook_id=orderbook_id)
-    return get_url(url)
+    return request_url(url)
 
 
 async def get_etf_async(
@@ -77,13 +97,13 @@ async def get_etf_async(
 ) -> dict[str, Any]:
     """Get latest information of an etf asynchronously."""
     url = AVANZA_API_ETF_URL.format(orderbook_id=orderbook_id)
-    return await get_url_async(session, url)
+    return await request_url_async(session, url)
 
 
 def get_index(orderbook_id: int) -> dict[str, Any]:
     """Get latest information of an index."""
     url = AVANZA_API_INDEX_URL.format(orderbook_id=orderbook_id)
-    return get_url(url)
+    return request_url(url)
 
 
 async def get_index_async(
@@ -91,16 +111,18 @@ async def get_index_async(
 ) -> dict[str, Any]:
     """Get latest information of an index asynchronously."""
     url = AVANZA_API_INDEX_URL.format(orderbook_id=orderbook_id)
-    return await get_url_async(session, url)
+    return await request_url_async(session, url)
 
 
-def search(query: str) -> dict[str, Any]:
+def search(query: str, limit: int = 10) -> dict[str, Any]:
     """Search for instruments."""
-    url = AVANZA_API_SEARCH_URL.format(query=query)
-    return get_url(url)
+    url = AVANZA_API_SEARCH_URL.format(limit=limit)
+    return request_url(url, data={"query": query})
 
 
-async def search_async(session: aiohttp.ClientSession, query: str) -> dict[str, Any]:
+async def search_async(
+    session: aiohttp.ClientSession, query: str, limit: int = 10
+) -> dict[str, Any]:
     """Search for instruments asynchronously."""
-    url = AVANZA_API_SEARCH_URL.format(query=query)
-    return await get_url_async(session, url)
+    url = AVANZA_API_SEARCH_URL.format(limit=limit)
+    return await request_url_async(session, url, data={"query": query})
