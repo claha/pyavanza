@@ -49,13 +49,11 @@ jobs:
         with:
           python-version: 3.x
 
-      - run: |
-          python3 -m pip install --upgrade pip
-          pip3 install setuptools wheel twine
-
       - env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -r requirements-build.txt
           python3 setup.py sdist bdist_wheel
           twine upload dist/*
