@@ -1,4 +1,5 @@
 """Test the api."""
+
 import urllib.error
 
 import aiohttp
