@@ -1,4 +1,5 @@
 """Setup script for pyavanza."""
+
 from setuptools import find_packages, setup
 
 NAME = "pyavanza"

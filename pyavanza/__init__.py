@@ -1,4 +1,5 @@
 """A python wrapper around the avanza api."""
+
 import json
 import logging
 import urllib.error
