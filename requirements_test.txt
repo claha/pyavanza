@@ -1,4 +1,4 @@
-aiohttp==3.9.1
+aiohttp==3.9.2
 pytest==7.4.3
 pytest-asyncio==0.23.2
 pytest-cov==4.1.0
