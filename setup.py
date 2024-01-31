@@ -3,7 +3,7 @@
 from setuptools import find_packages, setup
 
 NAME = "pyavanza"
-VERSION = "0.7.0"
+VERSION = "0.7.1"
 LICENSE = "MIT License"
 AUTHOR = "Claes Hallstrom"
 URL = "https://github.com/claha/pyavanza"
@@ -15,7 +15,7 @@ PACKAGES = find_packages()
 PACKAGE_DATA = {"pyavanza": ["py.typed"]}
 
 REQUIRES = [
-    "aiohttp==3.9.3",
+    "aiohttp>=3.9.3",
 ]
 
 CLASSIFIERS = [
