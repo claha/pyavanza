@@ -15,7 +15,7 @@ AVANZA_API_ENDPOINT = "https://www.avanza.se/_api"
 AVANZA_API_STOCK_URL = AVANZA_API_ENDPOINT + "/market-guide/stock/{orderbook_id}"
 AVANZA_API_ETF_URL = AVANZA_API_ENDPOINT + "/market-etf/{orderbook_id}"
 AVANZA_API_INDEX_URL = AVANZA_API_ENDPOINT + "/market-index/{orderbook_id}"
-AVANZA_API_SEARCH_URL = AVANZA_API_ENDPOINT + "/search/global-search?limit={limit}"
+AVANZA_API_SEARCH_URL = AVANZA_API_ENDPOINT + "/search/filtered-search?limit={limit}"
 
 
 class InstrumentType(str, Enum):

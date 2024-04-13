@@ -55,12 +55,11 @@ def check_index_info(info, orderbook_id):
 
 def check_search_info(info, query):
     """Check search info."""
+    print(info)
     assert info["searchQuery"] == query
-    hits = info["resultGroups"]
+    hits = info["hits"]
     for hit in hits:
-        assert isinstance(
-            pyavanza.InstrumentType(hit["instrumentType"]), pyavanza.InstrumentType
-        )
+        assert isinstance(pyavanza.InstrumentType(hit["type"]), pyavanza.InstrumentType)
 
 
 def make_mocked_session(mocker):
